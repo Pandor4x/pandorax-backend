@@ -25,6 +25,7 @@ const getRecipes = async (req, res) => {
     }
     res.json(recipes);
   } catch (err) {
+    console.error('Error in getRecipes:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -41,6 +42,7 @@ const getRecipeById = async (req, res) => {
     recipe.reviews = revRes.rows; // array of review objects
     res.json(recipe);
   } catch (err) {
+    console.error('Error in getRecipeById:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -79,6 +81,7 @@ const updateRecipe = async (req, res) => {
     );
     res.json({ message: "Recipe updated!", recipe: result.rows[0] });
   } catch (err) {
+    console.error('Error in updateRecipe:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -90,6 +93,7 @@ const deleteRecipe = async (req, res) => {
     await pool.query("DELETE FROM recipes WHERE id=$1", [id]);
     res.json({ message: "Recipe deleted!" });
   } catch (err) {
+    console.error('Error in deleteRecipe:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -108,6 +112,7 @@ const addReview = async (req, res) => {
     );
     res.json({ message: 'Review added', review: insert.rows[0] });
   } catch (err) {
+    console.error('Error in addReview:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -127,6 +132,7 @@ const addRating = async (req, res) => {
     await pool.query('UPDATE recipes SET ratings=$1 WHERE id=$2', [JSON.stringify(existing), id]);
     res.json({ message: 'Rating saved', ratings: existing });
   } catch (err) {
+    console.error('Error in addRating:', err);
     res.status(500).json({ error: err.message });
   }
 };
