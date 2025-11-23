@@ -120,7 +120,8 @@
         }
       });
     })();
-   // Example: fetch recipes by category
+  // Example: fetch recipes by category
+  const API_URL = 'https://pandor4x-pandorax-backend.onrender.com';
 const params = new URLSearchParams(window.location.search);
 const category = params.get('type') || 'Breakfast';
 document.getElementById('categoryTitle').textContent = formatCategoryLabel(category) + " Recipes";
@@ -132,7 +133,7 @@ function formatCategoryLabel(raw){ const c = canonicalizeCategory(raw||''); if(!
 
 async function loadRecipes() {
   try {
-    const res = await fetch(`https://pandor4x-pandorax-backend.onrender.com/api/recipes?category=${category}`);
+    const res = await fetch(`${API_URL}/api/recipes?category=${category}`);
     const recipes = await res.json();
 
     const list = document.getElementById("categoryRecipeList");
