@@ -29,7 +29,9 @@ const getRecipes = async (req, res) => {
     res.json(recipes);
   } catch (err) {
     console.error('Error in getRecipes:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
@@ -46,7 +48,9 @@ const getRecipeById = async (req, res) => {
     res.json(recipe);
   } catch (err) {
     console.error('Error in getRecipeById:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
@@ -68,7 +72,9 @@ const addRecipe = async (req, res) => {
     res.json({ message: "Recipe added!", recipe: result.rows[0] });
   } catch (err) {
     console.error('Error in addRecipe:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
@@ -85,7 +91,9 @@ const updateRecipe = async (req, res) => {
     res.json({ message: "Recipe updated!", recipe: result.rows[0] });
   } catch (err) {
     console.error('Error in updateRecipe:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
@@ -97,7 +105,9 @@ const deleteRecipe = async (req, res) => {
     res.json({ message: "Recipe deleted!" });
   } catch (err) {
     console.error('Error in deleteRecipe:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
@@ -116,7 +126,9 @@ const addReview = async (req, res) => {
     res.json({ message: 'Review added', review: insert.rows[0] });
   } catch (err) {
     console.error('Error in addReview:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
@@ -136,7 +148,9 @@ const addRating = async (req, res) => {
     res.json({ message: 'Rating saved', ratings: existing });
   } catch (err) {
     console.error('Error in addRating:', err);
-    res.status(500).json({ error: err.message });
+    const payload = { error: err.message || 'Internal Server Error' };
+    if (process.env.DEBUG === 'true') payload.stack = err.stack;
+    res.status(500).json(payload);
   }
 };
 
