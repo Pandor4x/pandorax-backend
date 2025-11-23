@@ -15,6 +15,23 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // Serve frontend static files (embedded in backend repo)
 const frontendDir = path.join(__dirname, 'recipe_frontend'); // embedded
+// Diagnostic: log the resolved frontend path and whether it exists (helpful on Render)
+try {
+  const frontendExists = fs.existsSync(frontendDir);
+  console.log('Resolved frontendDir =', frontendDir, 'exists =', frontendExists);
+  if (frontendExists) {
+    try {
+      const files = fs.readdirSync(frontendDir);
+      console.log('Frontend files count =', files.length);
+    } catch (e) {
+      console.warn('Failed to read frontendDir contents:', e && e.message);
+    }
+  } else {
+    console.warn('Frontend directory not found — static files will not be served.');
+  }
+} catch (e) {
+  console.warn('Error checking frontendDir:', e && e.message);
+}
 app.use(express.static(frontendDir));
 
 // Uploads folder
