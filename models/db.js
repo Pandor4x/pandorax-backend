@@ -8,6 +8,21 @@ const initialUseSsl = (process.env.DB_SSL === 'true') || (process.env.NODE_ENV =
 
 let activePool = null;
 
+// Safe masking helper: show only first/last 8 chars of connection strings
+function maskConn(s) {
+  if (!s || typeof s !== 'string') return '';
+  if (s.length <= 24) return s.replace(/./g, '*');
+  return `${s.slice(0,8)}...${s.slice(-8)}`;
+}
+
+// Log the initial decision (masked envs) to help verify deployed environment
+try {
+  const rawUrl = process.env.DATABASE_URL || '';
+  console.log('DB: initialUseSsl=', initialUseSsl, 'DATABASE_URL(masked)=', maskConn(rawUrl));
+} catch (e) {
+  console.warn('DB: failed to log initial env debug info', e && e.message);
+}
+
 function makePoolOptions(useSsl) {
   if (process.env.DATABASE_URL) {
     const opts = { connectionString: process.env.DATABASE_URL };
