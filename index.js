@@ -77,6 +77,18 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
+// Health/readiness endpoint (placed before SPA fallback so it isn't shadowed)
+app.get('/health', (req, res) => {
+  const frontendExists = !!(frontendDir && fs.existsSync(frontendDir));
+  res.json({
+    status: 'ok',
+    pid: process.pid,
+    uptime: process.uptime(),
+    frontendDir: frontendDir,
+    frontendExists: frontendExists
+  });
+});
+
 // 🔥 FIX: SPA fallback so frontend routes work
 // Use middleware instead of a route pattern to avoid path-to-regexp errors
 app.use((req, res, next) => {
@@ -97,27 +109,30 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-// Health/readiness endpoint
-app.get('/health', (req, res) => {
-  const frontendExists = !!(frontendDir && fs.existsSync(frontendDir));
-  res.json({
-    status: 'ok',
-    pid: process.pid,
-    uptime: process.uptime(),
-    frontendDir: frontendDir,
-    frontendExists: frontendExists
-  });
-});
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // Startup DB connectivity test — logs detailed errors to help diagnose "Connection terminated unexpectedly"
 setTimeout(async () => {
-  try {
-    console.log('DB: testing connectivity with SELECT 1');
-    const r = await pool.query('SELECT 1');
-    console.log('DB: connectivity test OK', r && r.rowCount);
-  } catch (err) {
-    console.error('DB connectivity test failed:', err && (err.stack || err));
+  const attempts = 6;
+  const baseDelay = 500; // ms
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      console.log('DB: testing connectivity with SELECT 1 (attempt', attempt, ')');
+      const r = await pool.query('SELECT 1');
+      console.log('DB: connectivity test OK', r && r.rowCount);
+      break;
+    } catch (err) {
+      const msg = err && (err.stack || err.message || err);
+      // If the pool proxy isn't ready yet, wait and retry
+      console.warn(`DB connectivity attempt ${attempt} failed:`, msg);
+      if (attempt === attempts) {
+        console.error('DB connectivity test failed after retries:', msg);
+        break;
+      }
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      await new Promise((res) => setTimeout(res, delay));
+      continue;
+    }
   }
 }, 1000);
