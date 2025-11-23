@@ -45,6 +45,9 @@ const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
 
+// Import DB pool for startup connectivity test (logs helpful on deploy)
+const pool = require('./models/db');
+
 // Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
@@ -107,3 +110,14 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Startup DB connectivity test — logs detailed errors to help diagnose "Connection terminated unexpectedly"
+setTimeout(async () => {
+  try {
+    console.log('DB: testing connectivity with SELECT 1');
+    const r = await pool.query('SELECT 1');
+    console.log('DB: connectivity test OK', r && r.rowCount);
+  } catch (err) {
+    console.error('DB connectivity test failed:', err && (err.stack || err));
+  }
+}, 1000);
