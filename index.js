@@ -13,8 +13,8 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
-// Serve frontend static files
-const frontendDir = path.join(__dirname, '..', 'recipe_frontend'); // 🔥 FIXED
+// Serve frontend static files (embedded in backend repo)
+const frontendDir = path.join(__dirname, 'recipe_frontend'); // embedded
 app.use(express.static(frontendDir));
 
 // Uploads folder
