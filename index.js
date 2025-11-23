@@ -34,6 +34,12 @@ try {
 }
 app.use(express.static(frontendDir));
 
+// Simple request logger to trace incoming requests (helps debug 500s)
+app.use((req, res, next) => {
+  console.log('REQ ->', req.method, req.path);
+  next();
+});
+
 // Uploads folder
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
