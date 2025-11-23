@@ -4,6 +4,7 @@ const pool = require('../models/db');
 const getRecipes = async (req, res) => {
   const { category } = req.query;
   try {
+    console.log('getRecipes called, category=', category);
     let query = "SELECT * FROM recipes";
     const params = [];
     if (category) {
@@ -13,11 +14,13 @@ const getRecipes = async (req, res) => {
     }
     const result = await pool.query(query, params);
     const recipes = result.rows;
+    console.log('getRecipes: fetched', recipes.length, 'recipes');
     // Attach reviews for each recipe so list endpoints include review data (used by trending cards)
     for (let i = 0; i < recipes.length; i++) {
       try {
         const revRes = await pool.query('SELECT id, uid, reviewer, text, rating, created_at FROM reviews WHERE recipe_id=$1 ORDER BY created_at DESC', [recipes[i].id]);
         recipes[i].reviews = revRes.rows;
+        console.log(`getRecipes: recipe ${recipes[i].id} has ${revRes.rows.length} reviews`);
       } catch (e) {
         // Non-fatal: if fetching reviews fails for a recipe, continue without reviews
         recipes[i].reviews = [];
