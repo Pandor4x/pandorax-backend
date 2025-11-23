@@ -88,4 +88,16 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
+// Health/readiness endpoint
+app.get('/health', (req, res) => {
+  const frontendExists = !!(frontendDir && fs.existsSync(frontendDir));
+  res.json({
+    status: 'ok',
+    pid: process.pid,
+    uptime: process.uptime(),
+    frontendDir: frontendDir,
+    frontendExists: frontendExists
+  });
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
