@@ -52,7 +52,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
 // 🔥 FIX: SPA fallback so frontend routes work
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(frontendDir, 'index.html'));
 });
 
