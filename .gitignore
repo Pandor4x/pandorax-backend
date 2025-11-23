@@ -1,7 +1,11 @@
 #.env files (do NOT commit secrets)
+
 .env
 *.env
 *.env.*
+
+# Allow a sanitized example file
+!/.env.example
 
 # frontend envs
 frontend/**/.env
