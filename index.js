@@ -13,8 +13,8 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
-// Serve frontend static files from sibling `recipe bookletsss` folder
-const frontendDir = path.join(__dirname, '..', 'recipe bookletsss');
+// Serve frontend static files from sibling `recipe_frontend` folder
+const frontendDir = path.join(__dirname, '..', 'recipe_frontend');
 app.use(express.static(frontendDir));
 
 // Ensure uploads directory exists and serve uploaded files
