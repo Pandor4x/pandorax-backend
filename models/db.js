@@ -20,4 +20,9 @@ if (useSsl) {
 
 const pool = new Pool(poolConfig);
 
+// Log pool-level errors (useful when connections are refused or SSL fails)
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle Postgres client', err);
+});
+
 module.exports = pool;
