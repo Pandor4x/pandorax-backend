@@ -1,0 +1,5 @@
+[dotenv@17.2.3] injecting env (8) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Resolved frontendDir = C:\Users\mimon\OneDrive\Desktop\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\recipebooookss\pandorax-backend\recipe_frontend exists = true
+Frontend files count = 16
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Server running on port 5000
