@@ -7,6 +7,7 @@ html, body {
 :root {
   --accent: #ff9800;
   --muted: #d0d0d0;
+  --footer-height: 64px;
 }
 
 body {
@@ -288,6 +289,10 @@ footer {
   left: 0;
   bottom: 0;
   z-index: 10;
+  height: var(--footer-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .footer-links a {
   color: #ff9800;
@@ -456,5 +461,18 @@ footer {
   .recipe-description { -webkit-line-clamp: 5; }
   footer { position: static; padding-bottom: 24px; }
   .floating-sidebar { position: static; box-shadow: none; border: none; padding: 0; margin-bottom: 12px; }
+}
+
+/* On small screens, fix the footer to the bottom and ensure main has bottom padding so content is visible */
+@media (max-width: 600px) {
+  footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    height: var(--footer-height, 64px);
+  }
+  main { padding-bottom: calc(var(--footer-height, 64px) + 12px); }
 }
 
